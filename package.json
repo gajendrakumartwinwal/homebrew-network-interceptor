@@ -1,0 +1,27 @@
+{
+  "name": "network-interceptor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d dist --source-maps",
+    "start": "npm run build && node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "atob": "^2.1.2",
+    "axios": "^1.4.0",
+    "btoa": "^1.2.1",
+    "lodash": "^4.17.21",
+    "node-fetch": "^3.3.2",
+    "prettier": "^3.0.2",
+    "puppeteer": "^21.0.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.22.10",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0"
+  }
+}
