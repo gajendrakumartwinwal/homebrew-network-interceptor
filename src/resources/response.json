@@ -23,5 +23,33 @@
       },
       "enable": true
     }
+  },
+  {
+    "url": "https://vap.expedia.com/vacservice/api/v3/partners/*/conversations",
+    "request": {
+      "mappedUrl": null,
+      "method": null,
+      "postData": null,
+      "headers": null,
+      "enable": false
+    },
+    "response": {
+      "status": 200,
+      "contentType": "application/json",
+      "headers": null,
+      "body": {
+        "conversations": [
+          {
+            "conversationId": "8c674d18-7c7f-45ea-86eb-54703c7b6d6f",
+            "participantId": "57fcad7a-87ac-4b01-af55-e027b55650c8",
+            "attributes": {
+              "conversationType": "main",
+              "unreadMessageCount": "33"
+            }
+          }
+        ]
+      },
+      "enable": true
+    }
   }
 ]
