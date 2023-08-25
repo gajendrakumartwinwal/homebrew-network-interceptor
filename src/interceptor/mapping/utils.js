@@ -1,5 +1,7 @@
 import fs from "fs";
-const FILE_PATH = './src/resources/response.json';
+const path = require('path');
+
+const FILE_PATH = path.join(__dirname, 'public/response.json');
 let mappingConfig = JSON.parse(fs.readFileSync(FILE_PATH));
 let lastUpdatedTime = Date.now();
 
@@ -10,11 +12,13 @@ export function matchUrlPattern(pattern, urlString) {
 }
 
 export function getMappingConfig() {
-    const currentTime = new Date();
+    const currentTime = Date.now();
     const timeDifferenceInMilliseconds = currentTime - lastUpdatedTime;
     const oneMinuteInMilliseconds = 10 * 1000;
+
     if (timeDifferenceInMilliseconds >= oneMinuteInMilliseconds) {
-        mappingConfig = JSON.parse(fs.readFileSync(FILE_PATH));
+        const fileContent = fs.readFileSync(FILE_PATH);
+        mappingConfig = JSON.parse(fileContent);
     }
     return mappingConfig;
 }

@@ -13,7 +13,8 @@ module.exports = {
         new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: path.resolve(__dirname, './src/resources/response.json'),
+                    from: './src/resources/response.json',
+                    to: 'public', // Output directory within the build
                 },
             ],
         }),

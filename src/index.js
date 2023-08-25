@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer'
-import requestInterceptor from './interceptor/requestInterceptor'
+import {requestInterceptor} from './interceptor/requestInterceptor'
 
-export const URL = 'https://vap-virtual-agent-control-test-tools-prod.us-west-2.prodp.gcotechp.expedia.com/tools/testVac20ForConversationV2';
+export const URL = 'https://dummyjson.com/products/1';
 (async function main() {
     const browser = await puppeteer.launch({
         headless: false,

@@ -1,13 +1,8 @@
 import Request from './Request'
 import Response from './Response'
-import middlewares from './middleware/index'
 import {getMappingConfig, matchUrlPattern} from "./utils";
-class Mapping{
-    enhancer = (type, data) => {
-        return middlewares.reduce((previousValue, middleware) => {
-            return middleware(type, previousValue)
-        }, data)
-    }
+
+class Mapping {
 
     /**
      * For overriding request
@@ -15,26 +10,25 @@ class Mapping{
      */
     async overrides(interceptedRequest) {
         const mappingConfig = await getMappingConfig();
-        const config = mappingConfig.find(value => matchUrlPattern(value.url, interceptedRequest.url()));
+        const config = mappingConfig.find(({url, request: {enable} = {}}) => enable && matchUrlPattern(url, interceptedRequest.url()));
         let overrides;
-        if(config){
+        if (config) {
             const request = new Request(config.request);
-            overrides = request.overrides(config.url, interceptedRequest);
+            overrides = request.overrides(interceptedRequest);
         }
-        return this.enhancer('request',overrides);
+        return overrides;
     }
 
-    async responseData(interceptedRequest){
+    async responseData(interceptedRequest) {
         const mappingConfig = await getMappingConfig();
-        const config = mappingConfig.find(value =>  matchUrlPattern(value.url, interceptedRequest.url()));
+        const config = mappingConfig.find(({url, response:{enable} = {}}) => enable && matchUrlPattern(url, interceptedRequest.url()));
         let responseData;
-        if(config){
+        if (config) {
             const response = new Response(config.response);
-            responseData = response.responseData(config.url, interceptedRequest);
+            responseData = response.responseData(interceptedRequest);
         }
-        return this.enhancer('response', responseData);
+        return responseData;
     }
-
 }
 
 const mapping = new Mapping();
