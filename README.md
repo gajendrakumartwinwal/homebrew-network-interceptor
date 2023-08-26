@@ -7,3 +7,4 @@
    npm run build:webpack & node dist/main.js
    ```
    
+3. To mock response you need to change mapping json file located at `dist/public/response.json`
