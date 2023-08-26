@@ -4,42 +4,39 @@ const _ = require("lodash");
 
 export const mergeResponse = async (overrides, responseData) => {
     if (responseData && overrides) {
-        const {method, url, headers, postData} = overrides || {};
+        const {method, url, headers: headerOverrides, postData} = overrides || {};
         const request = {
             method: method,
             url,
-            headers,
+            headers: headerOverrides,
             data: postData
         }
-        let response = {};
+        let status, headers, contentType, body;
         try{
-            response = await axios(request);
+            const response = await axios(request);
+            status = response.status;
+            headers = response.headers;
+            contentType = response.headers['content-type'];
+            body = response.data;
         }catch (e){
-            var errorStatus, errorHeaders, errorContentType, errorData;
             if (e.response) {
-                errorStatus = e.response.status;
-                errorHeaders = e.response.headers;
-                errorContentType =  'application/json';
-                errorData = {message: e.response.data};
+                status = e.response.status;
+                headers = e.response.headers;
+                contentType =  headers['content-type'];
+                body = e.response.data;
             } else {
-                errorStatus = 500;
-                errorContentType =  'application/json';
-                errorData = {message: e.message};
-            }
-            response = {
-                status: errorStatus,
-                contentType: errorContentType,
-                data: errorData,
-                headers: errorHeaders,
+                status = 500;
+                contentType =  'application/json';
+                body = {message: e.message};
             }
             console.log('Error', e);
         }
-        const {status, headers: responseHeader, contentType, body} = responseData;
+        const {status: mockStatus, headers: mockHeaders, contentType: mockContentType, body: mockBody} = responseData;
         const updatedResposeData = {
-            status: status || response.status,
-            headers: _.merge(response.headers, responseHeader, ),
-            contentType: contentType || response.contentType,
-            body: JSON.stringify(_.merge(response.data, body))
+            status: mockStatus || status,
+            headers: typeof headers === 'object' ? _.merge(headers, mockHeaders): headers,
+            contentType: mockContentType || contentType,
+            body: (typeof body === 'object' || !body) ? JSON.stringify(_.merge(body, mockBody)): body
         }
         return [undefined, updatedResposeData];
     }

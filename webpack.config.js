@@ -15,7 +15,7 @@ module.exports = {
                 {
                     from: './src/resources/response.json',
                     to: 'public', // Output directory within the build
-                },
+                }
             ],
         }),
     ],

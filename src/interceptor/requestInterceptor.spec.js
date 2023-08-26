@@ -110,7 +110,7 @@ describe('mergeResponse', () => {
         expect(response).toEqual([stringifiedOverrides, stringifiedResponseData])
     });
 
-    describe('overrides and responseData both available', () => {
+    describe('overrides and responseData if both available & axios request successful', () => {
         const mockResponseData = {
             status: 200,
             headers: {
@@ -132,7 +132,9 @@ describe('mergeResponse', () => {
 
         it("should call axios for overrides", async () => {
             // Arrange
-            axios.mockReturnValue({})
+            axios.mockReturnValue({
+                headers: {}
+            })
             await mergeResponse(mockOverrides, mockResponseData);
 
             // Assert
@@ -145,8 +147,6 @@ describe('mergeResponse', () => {
         })
 
         it.each([
-            [undefined, undefined, {}],
-            [undefined, {key1: 'value1'}, {key1: 'value1'}],
             [{key1: 'value1'}, undefined, {key1: 'value1'}],
             [{}, {key1: 'value1'}, {key1: 'value1'}],
             [{key1: 'value1'}, {}, {key1: 'value1'}],
@@ -179,7 +179,7 @@ describe('mergeResponse', () => {
             [[{key1: 'value1'}, {key2: 'value2'}], [{key2: 'value2', key1: 'keyChanged'}], [{key1: 'keyChanged', key2: 'value2'}, {key2: 'value2'}]],
             [[{key1: 'value1'}], [{key2: 'value2', key1: 'keyChanged'}, {key2: 'value2'}], [{key1: 'keyChanged', key2: 'value2'}, {key2: 'value2'}]],
             [[{key1: 'value1'}, {key2: 'value2'}], [{key2: 'value2', key1: 'keyChanged'}, {key2: 'keyChanged'}], [{key1: 'keyChanged', key2: 'value2'}, {key2: 'keyChanged'}]]
-        ])("body should be merged with axios body", async (mockAxiosBody, mockResponseBody, expectedBody) => {
+        ])("json body should be merged with axios body: %s & %s", async (mockAxiosBody, mockResponseBody, expectedBody) => {
             // Arrange
             axios.mockResolvedValue({
                 headers: {},
@@ -191,7 +191,26 @@ describe('mergeResponse', () => {
             const [_, {body}] = await mergeResponse(mockOverrides, mockResponseData);
 
             // Assert
-            expect(JSON.stringify(expectedBody)).toEqual(body)
+            expect(body).toEqual(JSON.stringify(expectedBody))
+        });
+
+        it.each([
+            ['<HTML Content>', undefined, '<HTML Content>'],
+            ['<HTML Content>', {key1: 'value1'}, '<HTML Content>'],
+            ['<HTML Content>', '<HTML Content1>', '<HTML Content>'],
+        ])("non json body should be merged with axios body: %s & %s", async (mockAxiosBody, mockResponseBody, expectedBody) => {
+            // Arrange
+            axios.mockResolvedValue({
+                headers: {},
+                data: mockAxiosBody,
+            });
+            mockResponseData.body = mockResponseBody;
+
+            // Act
+            const [_, {body}] = await mergeResponse(mockOverrides, mockResponseData);
+
+            // Assert
+            expect(body).toEqual(expectedBody)
         });
 
         it.each([
@@ -222,9 +241,10 @@ describe('mergeResponse', () => {
         ])("contentType: %s should be merged with axios contentType %s", async (mockAxiosContentType, mockResponseContentType, expectedContentType) => {
             // Arrange
             axios.mockResolvedValue({
-                headers: {},
+                headers: {
+                    ['content-type']: mockAxiosContentType
+                },
                 data: {},
-                contentType: mockAxiosContentType,
             });
             mockResponseData.contentType = mockResponseContentType;
 
@@ -232,7 +252,143 @@ describe('mergeResponse', () => {
             const [_, {contentType}] = await mergeResponse(mockOverrides, mockResponseData);
 
             // Assert
-            expect(expectedContentType).toEqual(contentType)
+            expect(contentType).toEqual(expectedContentType)
+        });
+    })
+    describe('overrides and responseData if both available & axios request failed', () => {
+        const mockResponseData = {
+            status: 200,
+            headers: {
+                mockHeaderKey: 'mockHeaderValue'
+            },
+            contentType: 'application/json',
+            body: {
+                mockBodyKey: 'mockBodyValue'
+            }
+        };
+        const mockMethod = 'mockMethod'
+        const mockURL = 'mockURL'
+        const mockHeader = 'mockHeader'
+        const mockPostData = {
+            mockKey: 'mockValue'
+        };
+        const mockOverrides = {method: mockMethod, url: mockURL, headers: mockHeader, postData: mockPostData}
+
+        it.each([
+            [{key1: 'value1'}, undefined, {key1: 'value1'}],
+            [{}, {key1: 'value1'}, {key1: 'value1'}],
+            [{key1: 'value1'}, {}, {key1: 'value1'}],
+            [{key1: 'value1'}, {key2: 'value2'}, {key1: 'value1', key2: 'value2'}],
+            [{key1: 'value1'}, {key2: 'value2', key1: 'keyChanged'}, {key1: 'keyChanged', key2: 'value2'}]
+        ])("header should be merged with axios error headers: %s and response headers: %s", async (mockAxiosHeader, mockResponseHeader, expectedHeaders) => {
+            // Arrange
+            const error = new Error('Async error');
+            error.response = {
+                headers: mockAxiosHeader,
+                data: {}
+            }
+            axios.mockRejectedValue(error);
+            mockResponseData.headers = mockResponseHeader;
+
+            // Act
+            const [_, {headers}] = await mergeResponse(mockOverrides, mockResponseData);
+
+            // Assert
+            expect(headers).toEqual(expectedHeaders)
+        });
+
+        it.each([
+            [undefined, undefined, {}],
+            [undefined, {key1: 'value1'}, {key1: 'value1'}],
+            [{key1: 'value1'}, undefined, {key1: 'value1'}],
+            [{}, {key1: 'value1'}, {key1: 'value1'}],
+            [{key1: 'value1'}, {}, {key1: 'value1'}],
+            [{key1: 'value1'}, {key2: 'value2'}, {key1: 'value1', key2: 'value2'}],
+            [{key1: 'value1'}, {key2: 'value2', key1: 'keyChanged'}, {key1: 'keyChanged', key2: 'value2'}],
+            [[{key1: 'value1'}], [{key2: 'value2', key1: 'keyChanged'}], [{key1: 'keyChanged', key2: 'value2'}]],
+            [[{key1: 'value1'}, {key2: 'value2'}], [{key2: 'value2', key1: 'keyChanged'}], [{key1: 'keyChanged', key2: 'value2'}, {key2: 'value2'}]],
+            [[{key1: 'value1'}], [{key2: 'value2', key1: 'keyChanged'}, {key2: 'value2'}], [{key1: 'keyChanged', key2: 'value2'}, {key2: 'value2'}]],
+            [[{key1: 'value1'}, {key2: 'value2'}], [{key2: 'value2', key1: 'keyChanged'}, {key2: 'keyChanged'}], [{key1: 'keyChanged', key2: 'value2'}, {key2: 'keyChanged'}]]
+        ])("json body should be merged with axios error body: %s & %s", async (mockAxiosBody, mockResponseBody, expectedBody) => {
+            // Arrange
+            const error = new Error('Async error');
+            error.response = {
+                headers: {},
+                data: mockAxiosBody
+            }
+            axios.mockRejectedValue(error);
+            mockResponseData.body = mockResponseBody;
+
+            // Act
+            const [_, {body}] = await mergeResponse(mockOverrides, mockResponseData);
+            console.log('GAJENDRAdas1', body, expectedBody)
+            // Assert
+            expect(body).toEqual(JSON.stringify(expectedBody))
+        });
+        it.each([
+            ['<HTML Content>', undefined, '<HTML Content>'],
+            ['<HTML Content>', {key1: 'value1'}, '<HTML Content>'],
+            ['<HTML Content>', '<HTML Content1>', '<HTML Content>'],
+        ])("json body should be merged with axios error body: %s & %s", async (mockAxiosBody, mockResponseBody, expectedBody) => {
+            // Arrange
+            const error = new Error('Async error');
+            error.response = {
+                headers: {},
+                data: mockAxiosBody
+            }
+            axios.mockRejectedValue(error);
+            mockResponseData.body = mockResponseBody;
+
+            // Act
+            const [_, {body}] = await mergeResponse(mockOverrides, mockResponseData);
+            // Assert
+            expect(body).toEqual(expectedBody)
+        });
+
+        it.each([
+            [200, 200, 200],
+            [200, undefined, 200],
+            [200, 500, 500],
+            [500, 200, 200],
+        ])("status should be merged with axios status", async (mockAxiosStatus, mockResponseStatus, expectedStatus) => {
+            // Arrange
+            const error = new Error('Async error');
+            error.response = {
+                status: mockAxiosStatus,
+                headers: {},
+                data: {}
+            }
+            axios.mockRejectedValue(error);
+            mockResponseData.status = mockResponseStatus;
+
+            // Act
+            const [_, {status}] = await mergeResponse(mockOverrides, mockResponseData);
+
+            // Assert
+            expect(expectedStatus).toEqual(status)
+        });
+        it.each([
+            ['application/json', 'application/json', 'application/json'],
+            ['application/json', undefined, 'application/json'],
+            ['application/json', 'file', 'file'],
+            ['file', 'application/json', 'application/json'],
+        ])("contentType: %s should be merged with axios contentType %s", async (mockAxiosContentType, mockResponseContentType, expectedContentType) => {
+            // Arrange
+            const error = new Error('Async error');
+            error.response = {
+                headers: {
+                    ['content-type']: mockAxiosContentType
+                },
+                data: {}
+            }
+            axios.mockRejectedValue(error);
+            mockResponseData.contentType = mockResponseContentType;
+
+            // Act
+            const [_, {contentType}] = await mergeResponse(mockOverrides, mockResponseData);
+
+            // Assert
+            expect(contentType).toEqual(expectedContentType)
         });
     })
 });
