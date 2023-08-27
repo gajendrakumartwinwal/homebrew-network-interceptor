@@ -21,7 +21,7 @@
       "body": {
         "environment": "value"
       },
-      "enable": false
+      "enable": true
     }
   }
 ]

@@ -6,7 +6,12 @@
   "scripts": {
     "build": "babel src -d dist --source-maps",
     "build:webpack": "webpack",
-    "start": "npm run build && node dist/index.js"
+    "start": "npm run build && node dist/index.js",
+    "package": "pkg . -t node16 --output build/network-interceptor",
+    "tar": "tar -cvzf ./build/network-interceptor.tar.gz ./build/network-interceptor"
+  },
+  "bin": {
+    "network-interceptor": "./dist/main.js"
   },
   "keywords": [],
   "author": "",
