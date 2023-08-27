@@ -41,6 +41,16 @@ describe('getMappingConfig', () => {
         expect(fs.readFileSync).toHaveBeenCalledTimes(1);
     });
 
+
+    it('should not crash if json file content is not proper json', () => {
+        // Arrange
+        fs.readFileSync.mockReturnValue(JSON.stringify(mapping1))
+        getMappingConfig();
+
+        const result = getMappingConfig();
+
+        expect(result).toEqual(mapping1);
+    });
 });
 
 describe('matchUrlPattern', () => {
