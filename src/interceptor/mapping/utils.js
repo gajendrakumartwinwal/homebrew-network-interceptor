@@ -21,9 +21,7 @@ export function getMappingConfig() {
     if (!mappingConfig || (timeDifferenceInMilliseconds >= oneMinuteInMilliseconds)) {
         const fileContent = fs.readFileSync(FILE_PATH);
         try{
-            console.info('GAJENDRA1',  fileContent)
             mappingConfig = JSON.parse(fileContent);
-            console.info('GAJENDRA2',  mappingConfig)
         }catch (e) {
             logger('error', 'Error occured while parsing json file', e);
         }

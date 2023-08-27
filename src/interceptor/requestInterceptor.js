@@ -52,8 +52,10 @@ export const requestInterceptor = async (interceptedRequest) => {
     const overrides = await mapping.overrides(interceptedRequest);
     const responseData = await mapping.responseData(interceptedRequest);
     const [overrides1, responseData1] = await mergeResponse(overrides, responseData);
-    logger('info', 'overrides -> ', overrides1 )
-    logger('info', 'responseData -> ', responseData1 )
+    if(overrides1 || responseData1){
+        logger('info', 'overrides -> ', overrides1 )
+        logger('info', 'responseData -> ', responseData1 )
+    }
     if (overrides1) return interceptedRequest.continue(overrides1);
     if (responseData1) {
         return interceptedRequest.respond(responseData1);

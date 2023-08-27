@@ -9,7 +9,8 @@
     "start": "npm run build && node dist/index.js",
     "package": "pkg . -t node16 --output build/network-interceptor",
     "tar": "tar -cvzf ./build/network-interceptor.tar.gz ./build/network-interceptor",
-    "move-to-tap": "mv ./build/network-interceptor.tar.gz /Users/gajkumar/Documents/Workspace/Personal/shell\\ script/homebrew-tap/"
+    "move-to-tap": "mv ./build/network-interceptor.tar.gz /Users/gajkumar/Documents/Workspace/Personal/shell\\ script/homebrew-tap/",
+    "all": "npm run build:webpack && npm run package && npm run tar && npm run move-to-tap"
   },
   "bin": {
     "network-interceptor": "./dist/main.js"

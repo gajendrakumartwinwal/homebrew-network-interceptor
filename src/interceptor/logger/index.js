@@ -1,6 +1,13 @@
-const logger = (key, ...data) =>{
-    const logsEnabled = process.env.NETWORK_INTERCEPTOR_LOGS || ['error']
-    if(logsEnabled.includes(key)){
+const logger = (key, ...data) => {
+    let logsEnabled = ['error']
+    try {
+        if (process.env.NETWORK_INTERCEPTOR_LOGS)
+            logsEnabled = process.env.NETWORK_INTERCEPTOR_LOGS.split(',');
+    } catch (e) {
+        console.error('process.env.NETWORK_INTERCEPTOR_LOGS parsing failed for: ', e);
+    }
+
+    if (logsEnabled.includes(key)) {
         console[key](data);
     }
 }
