@@ -1,8 +1,10 @@
 import puppeteer from 'puppeteer'
 import {requestInterceptor} from './interceptor/requestInterceptor'
+import {generateMappingJSON} from "./interceptor/mapping/utils";
 
 export const URL = 'https://dummyjson.com/products/1';
 (async function main() {
+    await generateMappingJSON();
     const browser = await puppeteer.launch({
         headless: false,
         devtools: true,

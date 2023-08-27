@@ -321,7 +321,6 @@ describe('mergeResponse', () => {
 
             // Act
             const [_, {body}] = await mergeResponse(mockOverrides, mockResponseData);
-            console.log('GAJENDRAdas1', body, expectedBody)
             // Assert
             expect(body).toEqual(JSON.stringify(expectedBody))
         });

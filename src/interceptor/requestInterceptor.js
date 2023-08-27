@@ -48,11 +48,13 @@ export const mergeResponse = async (overrides, responseData) => {
 
 export const requestInterceptor = async (interceptedRequest) => {
     if (interceptedRequest.isInterceptResolutionHandled()) return;
+    console.log('GAJENDRA -> 1', mapping)
     const overrides = await mapping.overrides(interceptedRequest);
+    console.log('GAJENDRA -> 2' )
     const responseData = await mapping.responseData(interceptedRequest);
     const [overrides1, responseData1] = await mergeResponse(overrides, responseData);
-    console.log('GAJENDRA -> overrides1 -> ', overrides1 )
-    console.log('GAJENDRA -> responseData1 -> ', responseData1 )
+    console.log('overrides1 -> ', overrides1 )
+    console.log('responseData1 -> ', responseData1 )
     if (overrides1) return interceptedRequest.continue(overrides1);
     if (responseData1) {
         return interceptedRequest.respond(responseData1);

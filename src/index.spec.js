@@ -1,8 +1,15 @@
 import puppeteer from 'puppeteer'
 import {requestInterceptor} from './interceptor/requestInterceptor'
+import {generateMappingJSON} from "./interceptor/mapping/utils";
 
 jest.mock('puppeteer')
+jest.mock('./interceptor/mapping/utils', () => ({
+    getMappingConfig: jest.fn(),
+    matchUrlPattern: jest.fn(),
+    generateMappingJSON: jest.fn().mockResolvedValue(),
+}));
 jest.mock('./interceptor/requestInterceptor')
+
 let mockPage;
 describe("index.js", () => {
     mockPage = {
@@ -20,9 +27,9 @@ describe("index.js", () => {
 
     });
 
-    it('puppeteer launch should have been called', () => {
+    it('puppeteer launch should have been called', async () => {
         // Action
-        require('./index');
+        await require('./index');
 
         // Assert
         expect(puppeteer.launch).toHaveBeenCalledWith({

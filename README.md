@@ -10,7 +10,7 @@
 3. To mock response you need to change mapping json file located at `dist/public/response.json`
 
 
-## Shell compatible package
+## Shell package generating
 
 Follow below steps
 1. First you have to package your code using below:
@@ -23,11 +23,8 @@ npm run package
 ```shell
 npm run tar
 ```
-3. Create/Update a homebrew formula
-```link
-https://github.com/gajendrakumartwinwal/homebrew-tap/blob/main/network-interceptor.rb
-```
-4. For installation follow below commands
+3. Move generated tar to homebrew-tap
 ```shell
-https://github.com/gajendrakumartwinwal/homebrew-tap/blob/main/README.md
+npm run move-to-tap
 ```
+4. After moving generated tar go homebrew-tap follow instruction at 

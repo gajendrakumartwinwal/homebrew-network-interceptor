@@ -18,11 +18,12 @@ describe('getMappingConfig', () => {
     it('should return mappingConfig from cache if less than one minute has passed', () => {
         // Arrange
         getMappingConfig();
+        fs.readFileSync.mockReturnValue(JSON.stringify(mapping1))
 
         const result = getMappingConfig();
 
         expect(result).toEqual(mapping);
-        expect(fs.readFileSync).toHaveBeenCalledTimes(0);
+        expect(fs.readFileSync).toHaveBeenCalledTimes(1);
     });
 
     it('should return mappingConfig from file if more than one minute has passed', () => {

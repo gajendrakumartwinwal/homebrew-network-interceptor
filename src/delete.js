@@ -1,6 +1,9 @@
-import _ from "lodash";
-const postRequestData = [{key1: 'value1'}]
-const postData1 = [{key2: 'value2', key1: 'keyChanged'}]
-const postData = _.merge(undefined, undefined);
+const fs = require('fs');
+const path = require('path');
 
-console.log('GAJENDRA', JSON.stringify(postData))
+const FILE_PATH = path.join(__dirname, 'mapping.json');
+if (fs.existsSync(FILE_PATH)) {
+    console.log('File Exists', FILE_PATH)
+} else {
+    console.log('File doest Exists', FILE_PATH)
+}
