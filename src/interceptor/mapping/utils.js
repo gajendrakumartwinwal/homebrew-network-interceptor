@@ -1,4 +1,5 @@
 import fs from "fs";
+import logger from "../logger";
 
 const path = require('path');
 
@@ -58,12 +59,12 @@ export async function generateMappingJSON() {
         if(!fs.existsSync(FILE_PATH)){
             const jsonData = JSON.stringify(data, null, 2);
             fs.writeFileSync(FILE_PATH, jsonData, 'utf8');
-            console.log('JSON file has been created successfully at:', FILE_PATH);
+            logger('info', 'JSON file has been created successfully at:', FILE_PATH);
         }else{
-            console.log('JSON already exists at:', FILE_PATH);
+            logger('error','JSON already exists at:', FILE_PATH);
         }
     } catch (err) {
-        console.log('Error: Make sure you have added mocking file path into the env variables \n' +
+        logger('error', 'Error: Make sure you have added mocking file path into the env variables \n' +
             'using command\n' +
             'export NETWORK_INTERCEPTOR_MAPPING=<json file path name>.json\n', err);
     }

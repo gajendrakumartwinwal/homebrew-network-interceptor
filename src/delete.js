@@ -1,9 +1,16 @@
-const fs = require('fs');
-const path = require('path');
+const logsEnabled = [
+    'info'
+]
+const valueToCheck1 = 'info';
+if(logsEnabled.includes['info'])
+    console.log('Found')
 
-const FILE_PATH = path.join(__dirname, 'mapping.json');
-if (fs.existsSync(FILE_PATH)) {
-    console.log('File Exists', FILE_PATH)
+
+const logsEnabled1 = ['info'];
+const valueToCheck = 'info';
+
+if (logsEnabled1.includes(valueToCheck)) {
+    console.log(`${valueToCheck} exists in the array.`);
 } else {
-    console.log('File doest Exists', FILE_PATH)
+    console.log(`${valueToCheck} does not exist in the array.`);
 }
