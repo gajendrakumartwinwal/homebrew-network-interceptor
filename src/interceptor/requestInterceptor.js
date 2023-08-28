@@ -1,6 +1,7 @@
 import mapping from "./mapping";
 import axios from "axios";
 import logger from "./logger";
+//import {printRequestChange, printResponseChange} from "./mapping/utils";
 const _ = require("lodash");
 
 export const mergeResponse = async (overrides, responseData) => {
@@ -53,6 +54,8 @@ export const requestInterceptor = async (interceptedRequest) => {
     const responseData = await mapping.responseData(interceptedRequest);
     const [overrides1, responseData1] = await mergeResponse(overrides, responseData);
     if(overrides1 || responseData1){
+        //printRequestChange(interceptedRequest, overrides1);
+        //printResponseChange(interceptedRequest, responseData);
         logger('info', 'overrides -> ', overrides1 )
         logger('info', 'responseData -> ', responseData1 )
     }

@@ -1,5 +1,6 @@
 import fs from "fs";
 import logger from "../logger";
+// import deepDiff from "deep-diff";
 
 const path = require('path');
 
@@ -72,4 +73,45 @@ export async function generateMappingJSON() {
             'using command\n' +
             'export NETWORK_INTERCEPTOR_MAPPING=<json file path name>.json\n', err);
     }
+}
+
+export function printRequestChange(interceptedRequest, overrides1) {
+    console.log("############################# REQUEST MODIFICATIONS #############################");
+    const urlDifferences = ''//deepDiff.diff(interceptedRequest.url(), overrides1.url);
+    console.log("Url modifications:");
+    logger('table', urlDifferences);
+
+    const headersDifferences = ''//deepDiff.diff(interceptedRequest.headers(), overrides1.headers);
+    console.log("Headers modifications:");
+    logger('table', headersDifferences);
+
+    const methodDifferences = ''//deepDiff.diff(interceptedRequest.method(), overrides1.method);
+    console.log("Method modifications:");
+    logger('table', methodDifferences);
+
+    const postDataDifferences = ''//deepDiff.diff(interceptedRequest.postData(), overrides1.method);
+    console.log("PostData modifications:");
+    logger('table', postDataDifferences);
+
+    console.log("#################################################################################");
+}
+export function printResponseChange() {
+    console.log("############################# REQUEST MODIFICATIONS #############################");
+    const urlDifferences = ''//deepDiff.diff(interceptedRequest.url(), overrides1.url);
+    console.log("Url modifications:");
+    logger('table', urlDifferences);
+
+    const headersDifferences = ''//deepDiff.diff(interceptedRequest.headers(), overrides1.headers);
+    console.log("Headers modifications:");
+    logger('table', headersDifferences);
+
+    const methodDifferences = ''//deepDiff.diff(interceptedRequest.method(), overrides1.method);
+    console.log("Method modifications:");
+    logger('table', methodDifferences);
+
+    const postDataDifferences = ''//deepDiff.diff(interceptedRequest.postData(), overrides1.method);
+    console.log("PostData modifications:");
+    logger('table', postDataDifferences);
+
+    console.log("#################################################################################");
 }
