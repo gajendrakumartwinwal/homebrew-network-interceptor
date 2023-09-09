@@ -1,4 +1,13 @@
 import Request from './Request'
+import urils from "./utils";
+import _ from "lodash";
+
+jest.mock('./utils', () => ({
+    getMappingConfig: jest.fn(),
+    matchUrlPattern: jest.fn(),
+    generateMappingJSON: jest.fn(),
+    getFunctionFromFile: jest.fn(),
+}));
 
 describe('overrides', () => {
 
@@ -122,4 +131,37 @@ describe('overrides', () => {
             // Assert
             expect(overridesMethod).toEqual(expectedOverridesMethod);
         });
+
+    it('mapFunction should be called if avalable and return mapped request', async () => {
+        // Arrange
+        const mockInterceptedRequestHeaders = {
+            'headerkey': 'headerValue'
+        }
+        const mockInterceptedRequestPostData = {
+            'postdatakey': 'postdatavalue'
+        }
+        const mockInterceptedRequest = {
+            url: () => 'http://testurl1',
+            method: () => 'get',
+            postData: () => JSON.stringify(mockInterceptedRequestPostData),
+            headers: () => mockInterceptedRequestHeaders,
+        }
+        const mapFunctionPath = 'mockFilePath'
+        const mockMapFuntion = () => ({
+            url: 'http://testurl2',
+            method: 'post',
+            headers: {
+                'mapFunctionHeaderKey': 'mapFunctionHeaderValue'
+            },
+            postData: {
+                'mapFunctionPostDataKey': 'mapFunctionPostDataValue'
+            },
+        })
+        urils.getFunctionFromFile.mockReturnValue(mockMapFuntion)
+        // Act
+        const result = new Request({mapFunctionPath: mapFunctionPath}).overrides(mockInterceptedRequest, _);
+
+        // Assert
+        expect(result).toEqual(mockMapFuntion());
+    });
 });

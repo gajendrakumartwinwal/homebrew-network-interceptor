@@ -24,7 +24,6 @@ describe("index.js", () => {
 
     beforeEach(() => {
         puppeteer.launch = jest.fn().mockReturnValue(mockBrowser);
-
     });
 
     it('puppeteer launch should have been called', async () => {

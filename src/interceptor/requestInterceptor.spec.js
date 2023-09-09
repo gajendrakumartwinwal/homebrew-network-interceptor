@@ -1,9 +1,17 @@
 import axios from 'axios';
 import {mergeResponse, requestInterceptor} from './requestInterceptor';
 import mapping from './mapping';
+import fs from "fs";
+import * as urils from "./mapping/utils";
 
 // Mock axios module and mapping module
 jest.mock('axios');
+jest.mock('./mapping/utils', () => ({
+    getMappingConfig: jest.fn(),
+    matchUrlPattern: jest.fn(),
+    generateMappingJSON: jest.fn(),
+    getFunctionFromFile: jest.fn(),
+}));
 jest.mock('./mapping', () => ({
     overrides: jest.fn(),
     responseData: jest.fn(),
@@ -96,6 +104,23 @@ describe('mergeResponse', () => {
         jest.clearAllMocks();
     });
 
+    const mockResponseData = {
+        status: 200,
+        headers: {
+            mockHeaderKey: 'mockHeaderValue'
+        },
+        contentType: 'application/json',
+        body: {
+            mockBodyKey: 'mockBodyValue'
+        }
+    };
+    const mockMethod = 'mockMethod'
+    const mockURL = 'mockURL'
+    const mockHeader = 'mockHeader'
+    const mockPostData = {
+        mockKey: 'mockValue'
+    };
+    const mockOverrides = {method: mockMethod, url: mockURL, headers: mockHeader, postData: mockPostData}
     it.each([
         [undefined, {status: 'status', headers: {}, contentType: 'contentType', body: {}}],
         [{method: {}, url: 'url', headers: {}, postData: {}}, undefined],
@@ -111,23 +136,6 @@ describe('mergeResponse', () => {
     });
 
     describe('overrides and responseData if both available & axios request successful', () => {
-        const mockResponseData = {
-            status: 200,
-            headers: {
-                mockHeaderKey: 'mockHeaderValue'
-            },
-            contentType: 'application/json',
-            body: {
-                mockBodyKey: 'mockBodyValue'
-            }
-        };
-        const mockMethod = 'mockMethod'
-        const mockURL = 'mockURL'
-        const mockHeader = 'mockHeader'
-        const mockPostData = {
-            mockKey: 'mockValue'
-        };
-        const mockOverrides = {method: mockMethod, url: mockURL, headers: mockHeader, postData: mockPostData}
 
 
         it("should call axios for overrides", async () => {
@@ -256,23 +264,6 @@ describe('mergeResponse', () => {
         });
     })
     describe('overrides and responseData if both available & axios request failed', () => {
-        const mockResponseData = {
-            status: 200,
-            headers: {
-                mockHeaderKey: 'mockHeaderValue'
-            },
-            contentType: 'application/json',
-            body: {
-                mockBodyKey: 'mockBodyValue'
-            }
-        };
-        const mockMethod = 'mockMethod'
-        const mockURL = 'mockURL'
-        const mockHeader = 'mockHeader'
-        const mockPostData = {
-            mockKey: 'mockValue'
-        };
-        const mockOverrides = {method: mockMethod, url: mockURL, headers: mockHeader, postData: mockPostData}
 
         it.each([
             [{key1: 'value1'}, undefined, {key1: 'value1'}],
@@ -389,5 +380,65 @@ describe('mergeResponse', () => {
             // Assert
             expect(contentType).toEqual(expectedContentType)
         });
+    })
+    describe('mapFunctionPath', () => {
+        it('mapFunctionPath should return modified data if both overrides and responseData available', async () => {
+            // Arrange
+            const mockMapFuntion = () => ({
+                contentType: 'application/json',
+                status: '201',
+                headers: {
+                    'mapFunctionHeaderKey': 'mapFunctionHeaderValue'
+                },
+                body: {
+                    'mapFunctionPostDataKey': 'mapFunctionPostDataValue'
+                },
+            })
+            urils.getFunctionFromFile.mockReturnValue(mockMapFuntion)
+
+            const error = new Error('Async error');
+            error.response = {
+                headers: {
+                    ['content-type']: 'application/json'
+                },
+                data: {}
+            }
+            axios.mockRejectedValue(error);
+            mockResponseData.contentType = 'file';
+            mockResponseData.mapFunctionPath = 'mapFunctionPath';
+
+            // Act
+            const [_, response] = await mergeResponse(mockOverrides, mockResponseData);
+
+            // Assert
+            expect(response).toEqual(mockMapFuntion())
+        })
+        it('mapFunctionPath should return modified data if only responseData available', async () => {
+            // Arrange
+            const mockMapFuntion = () => ({
+                contentType: 'application/json',
+                status: '201',
+                headers: {
+                    'mapFunctionHeaderKey': 'mapFunctionHeaderValue'
+                },
+                body: {
+                    'mapFunctionPostDataKey': 'mapFunctionPostDataValue'
+                },
+            })
+            urils.getFunctionFromFile.mockReturnValue(mockMapFuntion)
+
+            mockResponseData.contentType = 'file';
+            mockResponseData.mapFunctionPath = 'mapFunctionPath';
+
+            // Act
+            const [_, response] = await mergeResponse(undefined, mockResponseData);
+
+            // Assert
+            const expected = {
+                ...mockMapFuntion(),
+                body: JSON.stringify(mockMapFuntion().body)
+            }
+            expect(response).toEqual(expected)
+        })
     })
 });

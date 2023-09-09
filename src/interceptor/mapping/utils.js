@@ -1,10 +1,9 @@
 import fs from "fs";
 import logger from "../logger";
-// import deepDiff from "deep-diff";
 
 const path = require('path');
 
-const FILE_PATH = process.env.NETWORK_INTERCEPTOR_MAPPING || path.join(__dirname,  '..', 'mocking.json');
+const FILE_PATH = process.env.NETWORK_INTERCEPTOR_MAPPING || path.join(__dirname, '..', 'mocking.json');
 let mappingConfig;
 let lastUpdatedTime = Date.now();
 
@@ -21,9 +20,9 @@ export function getMappingConfig() {
 
     if (!mappingConfig || (timeDifferenceInMilliseconds >= oneMinuteInMilliseconds)) {
         const fileContent = fs.readFileSync(FILE_PATH);
-        try{
+        try {
             mappingConfig = JSON.parse(fileContent);
-        }catch (e) {
+        } catch (e) {
             logger('error', 'Error occured while parsing json file', e);
         }
     }
@@ -36,6 +35,7 @@ export async function generateMappingJSON() {
             "url": "https://dummyjson.com/products/1",
             "request": {
                 "mappedUrl": null,
+                "mapFunctionPath": null,
                 "method": "GET",
                 "postData": {
                     "test": "23"
@@ -47,6 +47,7 @@ export async function generateMappingJSON() {
             },
             "response": {
                 "status": 200,
+                "mapFunctionPath": null,
                 "contentType": "application/json",
                 "headers": {
                     "Authorization": "TOKEN"
@@ -61,18 +62,27 @@ export async function generateMappingJSON() {
 
     try {
         // Check if the file exists
-        if(!fs.existsSync(FILE_PATH)){
+        if (!fs.existsSync(FILE_PATH)) {
             const jsonData = JSON.stringify(data, null, 2);
             fs.writeFileSync(FILE_PATH, jsonData, 'utf8');
             logger('info', 'JSON file has been created successfully at:', FILE_PATH);
-        }else{
-            logger('error','JSON already exists at:', FILE_PATH);
+        } else {
+            logger('error', 'JSON already exists at:', FILE_PATH);
         }
     } catch (err) {
         logger('error', 'Error: Make sure you have added mocking file path into the env variables \n' +
             'using command\n' +
             'export NETWORK_INTERCEPTOR_MAPPING=<json file path name>.json\n', err);
     }
+}
+
+export function getFunctionFromFile(filePath) {
+    const jsonData = fs.readFileSync(path.join(__dirname, '..', filePath), 'utf8');
+    const firstIndex = jsonData.indexOf("{");
+    const lastIndex = jsonData.lastIndexOf("}");
+    const subString = jsonData.substring(firstIndex + 1, lastIndex);
+    let mapFunction = new Function('arg', '_', subString);
+    return mapFunction;
 }
 
 export function printRequestChange(interceptedRequest, overrides1) {
@@ -95,6 +105,7 @@ export function printRequestChange(interceptedRequest, overrides1) {
 
     console.log("#################################################################################");
 }
+
 export function printResponseChange() {
     console.log("############################# REQUEST MODIFICATIONS #############################");
     const urlDifferences = ''//deepDiff.diff(interceptedRequest.url(), overrides1.url);

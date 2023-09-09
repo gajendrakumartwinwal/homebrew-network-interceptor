@@ -6,6 +6,7 @@ class Response {
         this.headers = response.headers;
         this.contentType = response.contentType;
         this.body = response.body;
+        this.mapFunctionPath = response.mapFunctionPath;
     }
 
     responseData(interceptedRequest) {
@@ -25,7 +26,8 @@ class Response {
             status: this.status,
             headers: headers1,
             contentType: this.contentType,
-            body: this.body
+            body: this.body,
+            mapFunctionPath: this.mapFunctionPath
         }
     }
 }

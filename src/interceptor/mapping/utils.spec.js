@@ -1,5 +1,6 @@
 import fs from "fs";
-import {getMappingConfig, matchUrlPattern} from "./utils";
+import {getFunctionFromFile, getMappingConfig, matchUrlPattern} from "./utils";
+import _ from "lodash";
 
 const mapping = {url: 'http://url', request: {}, response: {}};
 const mapping1 = {url1: 'http://url', request1: {}, response1: {}};
@@ -70,5 +71,28 @@ describe('matchUrlPattern', () => {
 
         // Assert
         expect(result).toEqual(matched);
+    });
+});
+
+describe('getFunctionFromFile', () => {
+    beforeEach(() => {
+        jest.resetModules();
+    });
+    it('should return merged object using file function', () => {
+        // Arrange
+        const obj1 = {
+            'key1': 'value1'
+        }
+        const obj2 = {
+            'key2': 'value2'
+        }
+        const functionString = 'const p = (arg, _) => {const {obj1, obj2} = arg; return _.merge({}, obj1, obj2);}'
+        fs.readFileSync.mockReturnValue(functionString)
+
+        // Act
+        const result = getFunctionFromFile('./__test__/testfunction.js')({obj1, obj2}, _);
+
+        // Assert
+        expect(result).toEqual(_.merge({}, obj1, obj2));
     });
 });

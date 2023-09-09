@@ -12,7 +12,8 @@ describe('responseData', () => {
                 contentType: 'application/json',
                 body: {
                     key1: 'value1'
-                }
+                },
+                mapFunctionPath: 'filepath'
             }
             const mockInterceptedRequest = {
                 method: () => 'OPTIONS'
@@ -47,7 +48,8 @@ describe('responseData', () => {
                 contentType: 'application/json',
                 body: {
                     key1: 'value1'
-                }
+                },
+                mapFunctionPath: 'filepath'
             }
             const mockInterceptedRequest = {
                 method: () => 'GET'

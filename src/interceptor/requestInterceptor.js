@@ -1,6 +1,7 @@
 import mapping from "./mapping";
 import axios from "axios";
 import logger from "./logger";
+import {getFunctionFromFile} from "./mapping/utils";
 //import {printRequestChange, printResponseChange} from "./mapping/utils";
 const _ = require("lodash");
 
@@ -33,18 +34,20 @@ export const mergeResponse = async (overrides, responseData) => {
             }
             logger('error', e);
         }
-        const {status: mockStatus, headers: mockHeaders, contentType: mockContentType, body: mockBody} = responseData;
-        const updatedResposeData = {
+        const {status: mockStatus, headers: mockHeaders, contentType: mockContentType, body: mockBody, mapFunctionPath} = responseData;
+        let updatedResposeData = {
             status: mockStatus || status,
             headers: typeof headers === 'object' ? _.merge(headers, mockHeaders): headers,
             contentType: mockContentType || contentType,
             body: (typeof body === 'object' || !body) ? JSON.stringify(_.merge(body, mockBody)): body
         }
+        if(mapFunctionPath) updatedResposeData = getFunctionFromFile(mapFunctionPath)(updatedResposeData, _);
         return [undefined, updatedResposeData];
     }
     // we are parsing this as puppetier expects an string only
+    if(responseData && responseData.mapFunctionPath) responseData = getFunctionFromFile(responseData.mapFunctionPath)(responseData, _);
     const stringifiedOverrides = overrides ? {...overrides, postData: JSON.stringify(overrides.postData)} : overrides
-    const stringifiedResponseData = responseData ? {...responseData, body: JSON.stringify(responseData.body)} : responseData
+    let stringifiedResponseData = responseData ? {...responseData, body: JSON.stringify(responseData.body)} : responseData
     return [stringifiedOverrides, stringifiedResponseData];
 }
 
