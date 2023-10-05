@@ -15,7 +15,7 @@
 Follow below steps
 1. First you have to package your code using below:
 ```shell
-npm run package
+npm run packages
 ```
    For more info follow: https://www.npmjs.com/package/pkg
 
