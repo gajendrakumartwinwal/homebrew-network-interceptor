@@ -1,6 +1,6 @@
 {
   "name": "network-interceptor",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "dist/main.js",
   "scripts": {
@@ -19,6 +19,7 @@
     "tar-linux-arm64": "mkdir -p build/linux-arm64 && tar -cvzf ./build/linux-arm64/network-interceptor.tar.gz -C ./build/linux-arm64/ network-interceptor",
     "move-to-tap": "cp -R ./build /Users/gajkumar/Documents/Workspace/Personal/shell\\ script/homebrew-tap/",
     "all": "npm run build:webpack && npm run package && npm run tar && npm run move-to-tap",
+    "publish": "sh generate_formula.sh && sh publish-releases.sh",
     "test": "NETWORK_INTERCEPTOR_LOGS='' && jest"
   },
   "bin": {
