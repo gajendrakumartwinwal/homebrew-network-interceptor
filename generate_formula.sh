@@ -20,16 +20,16 @@ template='class NetworkInterceptor < Formula
   homepage ""
   # Conditionally select the URL based on the architecture
   if OS.mac? && Hardware::CPU.intel?
-    url "https://github.com/gajendrakumartwinwal/assets/releases/download/macos-x64_'"$current_version"'/network-interceptor.tar.gz"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/macos-x64_'"$current_version"'/network-interceptor.tar.gz"
     sha256 "'"$macos_x64_sha256_checksum"'"
   elsif OS.mac? && Hardware::CPU.arm?
-    url "https://github.com/gajendrakumartwinwal/assets/releases/download/macos-arm64_'"$current_version"'/network-interceptor.tar.gz"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/macos-arm64_'"$current_version"'/network-interceptor.tar.gz"
     sha256 "'"$macos_arm64_sha256_checksum"'"
   elsif OS.linux? && Hardware::CPU.intel?
-    url "https://github.com/gajendrakumartwinwal/assets/releases/download/linux-x64_'"$current_version"'/network-interceptor.tar.gz"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/linux-x64_'"$current_version"'/network-interceptor.tar.gz"
     sha256 "'"$linux_x64_sha256_checksum"'"
   elsif OS.linux? && Hardware::CPU.arm?
-    url "https://github.com/gajendrakumartwinwal/assets/releases/download/linux-arm64_'"$current_version"'/network-interceptor.tar.gz"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/linux-arm64_'"$current_version"'/network-interceptor.tar.gz"
     sha256 "'"$linux_arm64_sha256_checksum"'"
   else
     # Code for unsupported platforms or architectures
@@ -68,6 +68,6 @@ end
 '
 
 # Save the template as a .rb file
-echo "$template" > network_interceptor.rb
+echo "$template" > network-interceptor.rb
 
-echo "Generated network_interceptor.rb"
+echo "Generated network-interceptor.rb"

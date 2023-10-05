@@ -1,8 +1,8 @@
 #!/bin/bash
 # Replace these variables with your own values
 GITHUB_OWNER="gajendrakumartwinwal"
-GITHUB_REPO="network-interceptor"
-GITHUB_TOKEN="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"
+GITHUB_REPO="homebrew-tap-network-interceptor"
+GITHUB_TOKEN="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"
 VERSION="$1_$2"
 RELEASE_NOTES="Release notes for $2"
 FILE_TO_ATTACH="./build/$1/network-interceptor.tar.gz"  # Optional: Attach a file to the release

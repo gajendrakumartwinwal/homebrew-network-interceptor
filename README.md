@@ -4,7 +4,7 @@
 2. Run below command
 
    ```
-   npm run build:webpack & node dist/main.js
+   npm run build:webpack & node dist/index.js
    ```
    
 3. To mock response you need to change mapping json file located at `dist/public/response.json`
