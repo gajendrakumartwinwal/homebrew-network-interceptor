@@ -6,6 +6,7 @@ import * as urils from "./mapping/utils";
 
 // Mock axios module and mapping module
 jest.mock('axios');
+jest.mock('./logger');
 jest.mock('./mapping/utils', () => ({
     getMappingConfig: jest.fn(),
     matchUrlPattern: jest.fn(),
@@ -34,6 +35,7 @@ describe('requestInterceptor', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        process.env.NETWORK_INTERCEPTOR_LOGS=''
     });
 
     it('should return if resolution is handled', async () => {
@@ -102,6 +104,7 @@ describe('requestInterceptor', () => {
 describe('mergeResponse', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        process.env.NETWORK_INTERCEPTOR_LOGS=''
     });
 
     const mockResponseData = {

@@ -2,8 +2,10 @@ import fs from "fs";
 import logger from "../logger";
 
 const path = require('path');
-
-const FILE_PATH = process.env.NETWORK_INTERCEPTOR_MAPPING || path.join(__dirname, '..', 'mocking.json');
+const FOLDER_LOCATION = process.env.NETWORK_INTERCEPTOR_LOCATION || '/Library/Caches/network-inteceptor';
+fs.mkdirSync(FOLDER_LOCATION, { recursive: true });
+const FILE_PATH = FOLDER_LOCATION+'/mocking.json';
+const FUNCTION_PATH = FOLDER_LOCATION+'/mapFunction.js';
 let mappingConfig;
 let lastUpdatedTime = Date.now();
 
@@ -70,14 +72,39 @@ export async function generateMappingJSON() {
             logger('error', 'JSON already exists at:', FILE_PATH);
         }
     } catch (err) {
-        logger('error', 'Error: Make sure you have added mocking file path into the env variables \n' +
+        logger('error', 'Error: Make sure you have added mocking path into the env variables \n' +
+        'using command\n' +
+        'export NETWORK_INTERCEPTOR_FOLDER_PATH=<path name>\n', err);
+    }
+}
+export function generateMappingFunctionJSON() {
+    try {
+        // Check if the file exists
+        console.log('GAJENDRA', FUNCTION_PATH)
+        if (!fs.existsSync(FUNCTION_PATH)) {
+            const jsonData = 'const p = (arg, _) => {\n' +
+                '    const body = _.merge({}, arg.body, {name: \'gajendra\'})\n' +
+                '    const headers = _.merge({}, arg.headers, {"Authorization1": "TOKEN"})\n' +
+                '    return {\n' +
+                '        ...arg,\n' +
+                '        body,\n' +
+                '        headers,\n' +
+                '    };\n' +
+                '}'
+            fs.writeFileSync(FUNCTION_PATH, jsonData, 'utf8');
+            logger('info', 'JS file has been created successfully at:', FUNCTION_PATH);
+        } else {
+            logger('error', 'JS already exists at:', FUNCTION_PATH);
+        }
+    } catch (err) {
+        logger('error', 'Error: Make sure you have added mocking path into the env variables \n' +
             'using command\n' +
-            'export NETWORK_INTERCEPTOR_MAPPING=<json file path name>.json\n', err);
+            'export NETWORK_INTERCEPTOR_FOLDER_PATH=<path name>\n', err);
     }
 }
 
 export function getFunctionFromFile(filePath) {
-    const jsonData = fs.readFileSync(path.join(__dirname, '..', filePath), 'utf8');
+    const jsonData = fs.readFileSync(FOLDER_LOCATION+filePath, 'utf8');
     const firstIndex = jsonData.indexOf("{");
     const lastIndex = jsonData.lastIndexOf("}");
     const subString = jsonData.substring(firstIndex + 1, lastIndex);

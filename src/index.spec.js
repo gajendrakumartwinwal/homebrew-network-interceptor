@@ -1,12 +1,13 @@
 import puppeteer from 'puppeteer'
 import {requestInterceptor} from './interceptor/requestInterceptor'
-import {generateMappingJSON} from "./interceptor/mapping/utils";
+import {generateMappingFunctionJSON, generateMappingJSON} from "./interceptor/mapping/utils";
 
 jest.mock('puppeteer')
 jest.mock('./interceptor/mapping/utils', () => ({
     getMappingConfig: jest.fn(),
     matchUrlPattern: jest.fn(),
     generateMappingJSON: jest.fn().mockResolvedValue(),
+    generateMappingFunctionJSON: jest.fn().mockReturnValue(),
 }));
 jest.mock('./interceptor/requestInterceptor')
 
@@ -24,6 +25,7 @@ describe("index.js", () => {
 
     beforeEach(() => {
         puppeteer.launch = jest.fn().mockReturnValue(mockBrowser);
+
     });
 
     it('puppeteer launch should have been called', async () => {

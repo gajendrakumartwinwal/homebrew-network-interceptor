@@ -7,7 +7,8 @@ const mapping1 = {url1: 'http://url', request1: {}, response1: {}};
 
 
 jest.mock('fs', () => ({
-    readFileSync: jest.fn().mockReturnValue(JSON.stringify(mapping))
+    readFileSync: jest.fn().mockReturnValue(JSON.stringify(mapping)),
+    mkdirSync: jest.fn()
 }))
 
 describe('getMappingConfig', () => {

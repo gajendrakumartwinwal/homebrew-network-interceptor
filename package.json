@@ -6,11 +6,20 @@
   "scripts": {
     "build": "babel src -d dist --source-maps",
     "build:webpack": "webpack",
-    "start": "npm run build && node dist/index.js",
-    "package": "pkg . -t node16-macos-x64,node16-macos-arm64,node16-linux-x64,node16-linux-arm64 --output build/network-interceptor",
-    "tar": "tar -cvzf ./build/network-interceptor.tar.gz ./build/network-interceptor",
-    "move-to-tap": "mv ./build/network-interceptor.tar.gz /Users/gajkumar/Documents/Workspace/Personal/shell\\ script/homebrew-tap/",
-    "all": "npm run build:webpack && npm run package && npm run tar && npm run move-to-tap"
+    "start": "npm run build:webpack && node dist/index.js",
+    "package": "npm run package-macos-x64 && npm run package-macos-arm64 && npm run package-linux-x64 && npm run package-linux-arm64",
+    "package-macos-x64": "pkg . -t node16-macos-x64 --output build/macos-x64/network-interceptor",
+    "package-macos-arm64": "pkg . -t node16-macos-arm64 --output build/macos-arm64/network-interceptor",
+    "package-linux-x64": "pkg . -t node16-linux-x64 --output build/linux-x64/network-interceptor",
+    "package-linux-arm64": "pkg . -t node16-linux-arm64 --output build/linux-arm64/network-interceptor",
+    "tar": "npm run tar-macos-x64 && npm run tar-macos-arm64 && npm run tar-linux-x64 && npm run tar-linux-arm64",
+    "tar-macos-x64": "mkdir -p build/macos-x64 && tar -cvzf ./build/macos-x64/network-interceptor.tar.gz -C ./build/macos-x64/ network-interceptor",
+    "tar-macos-arm64": "mkdir -p build/macos-arm64 && tar -cvzf ./build/macos-arm64/network-interceptor.tar.gz -C ./build/macos-arm64/ network-interceptor",
+    "tar-linux-x64": "mkdir -p build/linux-x64 && tar -cvzf ./build/linux-x64/network-interceptor.tar.gz -C ./build/linux-x64/ network-interceptor",
+    "tar-linux-arm64": "mkdir -p build/linux-arm64 && tar -cvzf ./build/linux-arm64/network-interceptor.tar.gz -C ./build/linux-arm64/ network-interceptor",
+    "move-to-tap": "cp -R ./build /Users/gajkumar/Documents/Workspace/Personal/shell\\ script/homebrew-tap/",
+    "all": "npm run build:webpack && npm run package && npm run tar && npm run move-to-tap",
+    "test": "NETWORK_INTERCEPTOR_LOGS='' && jest"
   },
   "bin": {
     "network-interceptor": "./dist/main.js"
