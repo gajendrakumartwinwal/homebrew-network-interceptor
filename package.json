@@ -38,7 +38,7 @@
     "node-fetch": "^3.3.2",
     "path-browserify": "^1.0.1",
     "prettier": "^3.0.2",
-    "puppeteer": "^21.0.3"
+    "puppeteer-core": "^21.3.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.10",
