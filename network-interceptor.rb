@@ -3,17 +3,17 @@ class NetworkInterceptor < Formula
   homepage ""
   # Conditionally select the URL based on the architecture
   if OS.mac? && Hardware::CPU.intel?
-    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/13.0.0/macos-x64-network-interceptor.tar.gz"
-    sha256 "659c1195976163fdb321cea31cc012bc69cbb10077a50d93aa2c0fa55538eb90"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/15.0.0/macos-x64-network-interceptor.tar.gz"
+    sha256 "03cbcd6bb661430e063d028f4eb44bb2d406e5fa137ca59af4071a75ba9911b3"
   elsif OS.mac? && Hardware::CPU.arm?
-    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/13.0.0/macos-arm64-network-interceptor.tar.gz"
-    sha256 "52d86fb8bce9cd63c2d5dab259b49a86c424dcdfc9d44792a386105cdc127a06"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/15.0.0/macos-arm64-network-interceptor.tar.gz"
+    sha256 "178b32890090983140ea3655f0b8d10c3d51c5c763beb4b42a10e1d61479d574"
   elsif OS.linux? && Hardware::CPU.intel?
-    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/13.0.0/linux-x64-network-interceptor.tar.gz"
-    sha256 "659c1195976163fdb321cea31cc012bc69cbb10077a50d93aa2c0fa55538eb90"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/15.0.0/linux-x64-network-interceptor.tar.gz"
+    sha256 "03cbcd6bb661430e063d028f4eb44bb2d406e5fa137ca59af4071a75ba9911b3"
   elsif OS.linux? && Hardware::CPU.arm?
-    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/13.0.0/linux-arm64-network-interceptor.tar.gz"
-    sha256 "43eb120daad9920a7834279d1e40fadd04433418c49eafe24f6c81a7c295bb8a"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/15.0.0/linux-arm64-network-interceptor.tar.gz"
+    sha256 "d647f784563fa081aa2a73af0bac2b59099e1a5548974565eef9c297a648d58e"
   else
     # Code for unsupported platforms or architectures
   end
