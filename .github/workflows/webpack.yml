@@ -65,7 +65,8 @@ jobs:
 #         Add and commit the changes
 #        git add network-interceptor.rb
         git add dist
-        git commit -m "Update publish: ${{ steps.get-version.outputs.version }}"
+#        git commit -m "Update publish: ${{ steps.get-version.outputs.version }}"
+        git commit -m "Update file.txt"
           
 #         Push the changes to the different repository using the PAT
         git push https://$PAT_TOKEN@github.com/gajendrakumartwinwal/homebrew-tap.git main
