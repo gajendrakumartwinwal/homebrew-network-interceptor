@@ -32,7 +32,7 @@ jobs:
       run: echo "Package version is ${{ steps.get-version.outputs.version }}"
 
     - name: Display secrets api
-      run: echo "Package version is ${{ secrets.API_KEY }}"
+      run: echo "Package version is ${{ secrets.GITHUB_TOKEN }}"
 
     - name: Build
       run: |
@@ -57,4 +57,4 @@ jobs:
         title: Release title v${{ steps.get-version.outputs.version }}  # Specify the release title
         body: Release notes for v${{ steps.get-version.outputs.version }}  # Specify release notes
       env:
-          GITHUB_TOKEN: ${{ secrets.API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
