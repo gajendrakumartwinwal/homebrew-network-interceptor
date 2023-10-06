@@ -4,16 +4,16 @@ class NetworkInterceptor < Formula
   # Conditionally select the URL based on the architecture
   if OS.mac? && Hardware::CPU.intel?
     url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/15.0.0/macos-x64-network-interceptor.tar.gz"
-    sha256 "03cbcd6bb661430e063d028f4eb44bb2d406e5fa137ca59af4071a75ba9911b3"
+    sha256 "3739dbfc4dcc804c44a03bd3f787a13d4dfb01c9a4620d3a9a1d8198f3b5d4d7"
   elsif OS.mac? && Hardware::CPU.arm?
     url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/15.0.0/macos-arm64-network-interceptor.tar.gz"
-    sha256 "178b32890090983140ea3655f0b8d10c3d51c5c763beb4b42a10e1d61479d574"
+    sha256 "8764e229a61ba9a5ac862933448e24af09785605f80ca2da77490730f607fb97"
   elsif OS.linux? && Hardware::CPU.intel?
     url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/15.0.0/linux-x64-network-interceptor.tar.gz"
-    sha256 "03cbcd6bb661430e063d028f4eb44bb2d406e5fa137ca59af4071a75ba9911b3"
+    sha256 "3739dbfc4dcc804c44a03bd3f787a13d4dfb01c9a4620d3a9a1d8198f3b5d4d7"
   elsif OS.linux? && Hardware::CPU.arm?
     url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/15.0.0/linux-arm64-network-interceptor.tar.gz"
-    sha256 "d647f784563fa081aa2a73af0bac2b59099e1a5548974565eef9c297a648d58e"
+    sha256 "8d8fce21ef9b98239085fc7725a797cb308136f616036fa8305f54de8ac0d880"
   else
     # Code for unsupported platforms or architectures
   end
