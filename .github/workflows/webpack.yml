@@ -41,6 +41,15 @@ jobs:
 #        npm run tar               # Generate zip file for brew publish
 #        sh generate_formula.sh    # Generate brew rb file
 
+
+    - name: Modify and commit file
+      run: |
+        git config user.name "gajendrakumartwinwal"
+        git config user.email "gajendrakumartwinwal@gmail.com"
+        git add dist
+        git commit -m "Update file.txt"
+        git push https://${{ secrets.API_TOKEN }}@github.com/gajendrakumartwinwal/homebrew-tap.git main
+
 #    - name: Create GitHub Release
 #      uses: softprops/action-gh-release@v1
 #      with:
@@ -55,20 +64,3 @@ jobs:
 #        body: Release notes for v${{ steps.get-version.outputs.version }}  # Specify release notes
 #      env:
 #          GITHUB_TOKEN: ${{ secrets.API_TOKEN }}
-
-    - name: Modify and commit file
-      run: |
-#         Configure Git with your user information
-        git config user.name "gajendrakumartwinwal"
-        git config user.email "gajendrakumartwinwal@gmail.com"
-          
-#         Add and commit the changes
-#        git add network-interceptor.rb
-        git add dist
-#        git commit -m "Update publish: ${{ steps.get-version.outputs.version }}"
-        git commit -m "Update file.txt"
-          
-#         Push the changes to the different repository using the PAT
-        git push https://$PAT_TOKEN@github.com/gajendrakumartwinwal/homebrew-tap.git main
-      env:
-        PAT_TOKEN: ${{ secrets.API_TOKEN }}
