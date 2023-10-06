@@ -2,7 +2,7 @@
 # Replace these variables with your own values
 GITHUB_OWNER="gajendrakumartwinwal"
 GITHUB_REPO="homebrew-tap-network-interceptor"
-GITHUB_TOKEN="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"
+GITHUB_TOKEN="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"
 VERSION="$1_$2"
 RELEASE_NOTES="Release notes for $2"
 FILE_TO_ATTACH="./build/$1/network-interceptor.tar.gz"  # Optional: Attach a file to the release
