@@ -11,7 +11,7 @@ version=$(node -pe "require('./package.json').version")
 echo $version_macos_x64
 GITHUB_OWNER="gajendrakumartwinwal"
 GITHUB_REPO="homebrew-tap-network-interceptor"
-GITHUB_TOKEN="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"
+GITHUB_TOKEN=$1
 VERSION="$version"
 RELEASE_NOTES="Release notes for version"
 # Create a release on GitHub
