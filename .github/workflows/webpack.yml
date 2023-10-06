@@ -49,6 +49,7 @@ jobs:
           ./build/tar/macos-arm64-network-interceptor.tar.gz
           ./build/tar/linux-x64-network-interceptor.tar.gz
           ./build/tar/linux-arm64-network-interceptor.tar.gz
+          ./dist/index.js
         tag_name: ${{ steps.get-version.outputs.version }}  # Specify the release tag name
         release_name: Release v${{ steps.get-version.outputs.version }}  # Specify the release name
         title: Release title v${{ steps.get-version.outputs.version }}  # Specify the release title
