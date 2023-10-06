@@ -19,8 +19,8 @@
     "tar-linux-arm64": "mkdir -p build/linux-arm64 && tar -cvzf ./build/linux-arm64/network-interceptor.tar.gz -C ./build/linux-arm64/ network-interceptor",
     "move-to-tap": "cp -R ./build /Users/gajkumar/Documents/Workspace/Personal/shell\\ script/homebrew-tap/",
     "all": "npm run build:webpack && npm run package && npm run tar && npm run move-to-tap",
-    "publish": "npm run publish:release",
-    "publish:release": "sh generate_formula.sh && sh publish-releases.sh && npm run publish_rb_file",
+    "publish": "npm run build:webpack && npm run package && npm run tar && npm run publish:release",
+    "publish:release": "sh generate_formula.sh && sh publish-releases.sh",
     "publish_rb_file": "git add network-interceptor.rb && git commit -m published_release && git push",
     "test": "NETWORK_INTERCEPTOR_LOGS='' && jest"
   },

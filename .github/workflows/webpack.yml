@@ -27,5 +27,8 @@ jobs:
 
     - name: Build
       run: |
+        chmod +x generate_formula.sh  # Make the script executable
+        chmod +x publish-releases.sh  # Make the script executable
+        chmod +x generate_formula.sh  # Make the script executable
         npm install
         npm run publish
