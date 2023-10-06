@@ -31,4 +31,18 @@ jobs:
         chmod +x publish-releases.sh  # Make the script executable
         chmod +x generate_formula.sh  # Make the script executable
         npm install
-        npm run publish
+        npm run build:webpack     # Generate build
+        npm run package           # Generate package sh executable file
+        npm run tar               # Generate zip file for brew publish
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./build/tar
+        tag_name: v1.0.0  # Specify the release tag name
+        release_name: Release v1.0.0  # Specify the release name
+        title: Release v1.0.0  # Specify the release title
+        body: Release notes for v1.0.0  # Specify release notes
+      env:
+          GITHUB_TOKEN: ${{ secrets.API_KEY }}
