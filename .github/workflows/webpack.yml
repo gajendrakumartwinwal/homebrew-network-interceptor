@@ -46,7 +46,7 @@ jobs:
       run: |
         git config user.name "gajendrakumartwinwal"
         git config user.email "gajendrakumartwinwal@gmail.com"
-        git add dist
+        git add network-interceptor.rb
         git commit -m "Update file.txt"
         git push https://${{ secrets.API_TOKEN }}@github.com/gajendrakumartwinwal/homebrew-tap.git main
 
