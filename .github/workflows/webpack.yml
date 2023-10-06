@@ -24,6 +24,12 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Get package.json version
+      id: get-version
+      run: echo ::set-output name=version::$(node -p "require('./package.json').version")
+
+    - name: Display package.json version
+      run: echo "Package version is ${{ steps.get-version.outputs.version }}"
 
     - name: Build
       run: |
@@ -40,9 +46,9 @@ jobs:
       with:
         files: |
           ./build/tar
-        tag_name: v1.0.0  # Specify the release tag name
-        release_name: Release v1.0.0  # Specify the release name
-        title: Release v1.0.0  # Specify the release title
-        body: Release notes for v1.0.0  # Specify release notes
+        tag_name: tag${{ steps.get-version.outputs.version }}  # Specify the release tag name
+        release_name: Release v${{ steps.get-version.outputs.version }}  # Specify the release name
+        title: Release title v${{ steps.get-version.outputs.version }}  # Specify the release title
+        body: Release notes for v${{ steps.get-version.outputs.version }}  # Specify release notes
       env:
           GITHUB_TOKEN: ${{ secrets.API_KEY }}

@@ -2,10 +2,10 @@
 current_version=$(node -pe "require('./package.json').version")
 
 # Path to the network-interceptor.tar.gz file
-linux_arm64_tarball_path="build/linux-arm64/network-interceptor.tar.gz"
-linux_x64_tarball_path="build/linux-x64/network-interceptor.tar.gz"
-macos_arm64_tarball_path="build/macos-arm64/network-interceptor.tar.gz"
-macos_x64_tarball_path="build/linux-x64/network-interceptor.tar.gz"
+linux_arm64_tarball_path="build/tar/linux-arm64-network-interceptor.tar.gz"
+linux_x64_tarball_path="build/tar/linux-x64-network-interceptor.tar.gz"
+macos_arm64_tarball_path="build/tar/macos-arm64-network-interceptor.tar.gz"
+macos_x64_tarball_path="build/tar/linux-x64-network-interceptor.tar.gz"
 # Generate SHA256 checksum using OpenSSL
 linux_arm64_sha256_checksum=$(openssl sha256 $linux_arm64_tarball_path | awk '{print $2}')
 linux_x64_sha256_checksum=$(openssl sha256 $linux_x64_tarball_path | awk '{print $2}')
@@ -20,16 +20,16 @@ template='class NetworkInterceptor < Formula
   homepage ""
   # Conditionally select the URL based on the architecture
   if OS.mac? && Hardware::CPU.intel?
-    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/macos-x64_'"$current_version"'/network-interceptor.tar.gz"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/'"$current_version"'/macos-x64-network-interceptor.tar.gz"
     sha256 "'"$macos_x64_sha256_checksum"'"
   elsif OS.mac? && Hardware::CPU.arm?
-    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/macos-arm64_'"$current_version"'/network-interceptor.tar.gz"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/'"$current_version"'/macos-arm64-network-interceptor.tar.gz"
     sha256 "'"$macos_arm64_sha256_checksum"'"
   elsif OS.linux? && Hardware::CPU.intel?
-    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/linux-x64_'"$current_version"'/network-interceptor.tar.gz"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/'"$current_version"'/linux-x64-network-interceptor.tar.gz"
     sha256 "'"$linux_x64_sha256_checksum"'"
   elsif OS.linux? && Hardware::CPU.arm?
-    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/linux-arm64_'"$current_version"'/network-interceptor.tar.gz"
+    url "https://github.com/gajendrakumartwinwal/homebrew-tap-network-interceptor/releases/download/'"$current_version"'/linux-arm64-network-interceptor.tar.gz"
     sha256 "'"$linux_arm64_sha256_checksum"'"
   else
     # Code for unsupported platforms or architectures
