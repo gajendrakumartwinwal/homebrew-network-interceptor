@@ -11,6 +11,7 @@ export const URL = 'https://dummyjson.com/products/1';
         headless: false,
         devtools: true,
     });
+
     const page = (await browser.pages())[0];
     // Enable request interception
     await page.setRequestInterception(true);

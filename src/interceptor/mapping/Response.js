@@ -22,8 +22,9 @@ class Response {
                 'Access-Control-Allow-Origin': "*"
             }
         )
+        const status1 = interceptedRequest.method() === 'OPTIONS' ? 200 : this.status;
         return {
-            status: this.status,
+            status: status1,
             headers: headers1,
             contentType: this.contentType,
             body: this.body,

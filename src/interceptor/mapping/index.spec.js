@@ -27,7 +27,8 @@ jest.mock('./Response', () => {
 const mockInterceptURL = 'http://testurl'
 const mockURL1 = 'http://url1'
 const mockInterceptedRequest = {
-    url: () => mockInterceptURL
+    url: () => mockInterceptURL,
+    method: jest.fn().mockReturnValue('GET')
 }
 describe('overrides', () => {
 
@@ -35,11 +36,11 @@ describe('overrides', () => {
         jest.clearAllMocks();
     });
 
-    it('should return undefined overrides if url is not found in mapping & request is enabled & should matchUrlPattern', async () => {
+    it('should return undefined overrides if url is not found in mapping & request is enabled & should call matchUrlPattern', async () => {
         // Arrange
 
         getMappingConfig.mockResolvedValue([
-            {url: mockURL1, request: {enable: true}},
+            {url: mockURL1, request: {enable: true, method: 'GET'}},
         ])
         matchUrlPattern.mockReturnValue(false);
 
@@ -51,11 +52,11 @@ describe('overrides', () => {
         expect(matchUrlPattern).toHaveBeenCalledWith(mockURL1, mockInterceptURL);
         expect(overrides).toBeUndefined();
     });
-    it('should return undefined overrides request is not enabled & should not call matchUrlPattern', async () => {
+    it('should return undefined overrides if request is not enabled & should not call matchUrlPattern', async () => {
         // Arrange
 
         getMappingConfig.mockResolvedValue([
-            {url: mockURL1, request: {enable: false}},
+            {url: mockURL1, request: {enable: false, method: 'GET'}},
         ])
 
         // Act
@@ -65,13 +66,26 @@ describe('overrides', () => {
         expect(matchUrlPattern).toHaveBeenCalledTimes(0);
         expect(overrides).toBeUndefined();
     });
+    it('should return undefined overrides if method is not matched & request is enabled & should not call matchUrlPattern', async () => {
+        // Arrange
 
+        getMappingConfig.mockResolvedValue([
+            {url: mockURL1, request: {enable: true, method: 'POST'}},
+        ])
+
+        // Act
+        const overrides = await mapping.overrides(mockInterceptedRequest);
+
+        // Assert
+        expect(matchUrlPattern).toHaveBeenCalledTimes(0);
+        expect(overrides).toBeUndefined();
+    });
     it('should return overrides from request if url is found in mapping & requst is enabled', async () => {
         // Arrange
 
 
         getMappingConfig.mockResolvedValue([
-            {url: mockURL1, request: {enable: true}},
+            {url: mockURL1, request: {enable: true, method: 'GET'}},
         ])
 
         matchUrlPattern.mockReturnValue(true);
@@ -95,7 +109,7 @@ describe('responseData', () => {
         // Arrange
 
         getMappingConfig.mockResolvedValue([
-            {url: mockURL1, response: {enable: true}},
+            {url: mockURL1, response: {enable: true, method: 'GET'}},
         ])
         matchUrlPattern.mockReturnValue(false);
 
@@ -111,7 +125,21 @@ describe('responseData', () => {
         // Arrange
 
         getMappingConfig.mockResolvedValue([
-            {url: mockURL1, response: {enable: false}},
+            {url: mockURL1, response: {enable: false, method: 'GET'}},
+        ])
+
+        // Act
+        const responseData = await mapping.responseData(mockInterceptedRequest);
+
+        // Assert
+        expect(matchUrlPattern).toHaveBeenCalledTimes(0);
+        expect(responseData).toBeUndefined();
+    });
+    it('should return undefined overrides if method is not matched & request is enabled & should not call matchUrlPattern', async () => {
+        // Arrange
+
+        getMappingConfig.mockResolvedValue([
+            {url: mockURL1, response: {enable: true, method: 'POST'}},
         ])
 
         // Act
@@ -125,7 +153,7 @@ describe('responseData', () => {
         // Arrange
 
         getMappingConfig.mockResolvedValue([
-            {url: mockURL1, response: {enable: true}},
+            {url: mockURL1, response: {enable: true, method: 'GET'}},
         ])
         matchUrlPattern.mockReturnValue(true);
 

@@ -10,7 +10,11 @@ class Mapping {
      */
     async overrides(interceptedRequest) {
         const mappingConfig = await getMappingConfig();
-        const config = mappingConfig.find(({url, request: {enable} = {}}) => enable && matchUrlPattern(url, interceptedRequest.url()));
+        const requestURL = interceptedRequest.url();
+        const requestMethod = interceptedRequest.method();
+        const config = mappingConfig.find(
+            ({url, request: {enable, method} = {}}) => enable && method === requestMethod && matchUrlPattern(url, requestURL)
+        );
         let overrides;
         if (config) {
             const request = new Request(config.request);
@@ -21,7 +25,9 @@ class Mapping {
 
     async responseData(interceptedRequest) {
         const mappingConfig = await getMappingConfig();
-        const config = mappingConfig.find(({url, response:{enable} = {}}) => enable && matchUrlPattern(url, interceptedRequest.url()));
+        const requestURL = interceptedRequest.url();
+        const requestMethod = interceptedRequest.method();
+        const config = mappingConfig.find(({url, response:{enable, method} = {}}) => enable && method === requestMethod && matchUrlPattern(url, requestURL));
         let responseData;
         if (config) {
             const response = new Response(config.response);
